@@ -18,7 +18,7 @@ if __name__ == "__main__":
 ROOT.EnableThreadSafety()
 
 import FLAF.Common.Utilities as Utilities
-from FLAF.Common.HistHelper import *
+from FLAF.Analysis.HistHelper import *
 from Analysis.hh_bbtautau import *
 
 ggR_samples = [
