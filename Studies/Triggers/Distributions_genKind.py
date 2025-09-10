@@ -17,7 +17,7 @@ if __name__ == "__main__":
 #ROOT.EnableImplicitMT(1)
 ROOT.EnableThreadSafety()
 
-from FLAF.Analysis.HistHelper import *
+from FLAF.Common.HistHelper import *
 from Analysis.hh_bbtautau import *
 from Studies.Triggers.Trig_utilities import *
 

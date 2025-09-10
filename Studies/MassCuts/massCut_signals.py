@@ -15,7 +15,7 @@ if __name__ == "__main__":
     import argparse
     import yaml
     import FLAF.Common.Utilities as Utilities
-    from FLAF.Analysis.HistHelper import *
+    from FLAF.Common.HistHelper import *
     from Analysis.hh_bbtautau import *
     import GetIntervals
     import GetIntervalsSimultaneously

@@ -2,7 +2,7 @@ import ROOT
 if __name__ == "__main__":
     sys.path.append(os.environ['ANALYSIS_PATH'])
 
-from FLAF.Analysis.HistHelper import *
+from FLAF.Common.HistHelper import *
 from Analysis.GetCrossWeights import *
 # from Analysis.GetTauTauWeights import *
 from FLAF.Common.Utilities import *
@@ -95,7 +95,7 @@ def GetWeight(channel, cat, boosted_categories):
 
     weights_to_apply.extend(ID_weights_dict[channel])
     # weights_to_apply.extend(trg_weights_dict[channel])
-    
+
     # if cat not in boosted_categories:
     #      weights_to_apply.extend(["weight_Jet_PUJetID_Central_b1_2", "weight_Jet_PUJetID_Central_b2_2"])
     # else:
