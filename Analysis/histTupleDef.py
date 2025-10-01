@@ -5,7 +5,6 @@ from FLAF.Common.HistHelper import *
 if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
-
 initialized = False
 analysis = None
 
@@ -17,14 +16,10 @@ def Initialize():
         ROOT.gROOT.ProcessLine(f".include {os.environ['ANALYSIS_PATH']}")
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/HistHelper.h"')
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/Utilities.h"')
-        ROOT.gInterpreter.Declare(
-            f'#include "FLAF/include/pnetSF.h"'
-        )  # do we need this??
+        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/MT2.h"')
+        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/Lester_mt2_bisect.cpp"')
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisTools.h"')
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisMath.h"')
-        ROOT.gInterpreter.Declare(
-            f'#include "include/Helper.h"'
-        )  # not related to FullEvtId definition but needed for analysis specific purpose. At a certain point it will be moved to analysis specific section.
         initialized = True
 
 
@@ -36,7 +31,7 @@ def analysis_setup(setup):
 
 def GetDfw(
     df,
-    df_cache,
+    df_caches,
     global_params,
     shift="Central",
     col_names_central=[],
@@ -47,17 +42,32 @@ def GetDfw(
     kwargset = (
         {}
     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
+    # Example from Hmm analysis:
+
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
+    kwargset["wantScales"] = global_params["compute_unc_variations"]
     kwargset["colToSave"] = []
-
+    kwargset["deepTauVersion"] = global_params["deepTauVersion"]
+    kwargset["bTagWPString"] = "Medium"
+    kwargset["pNetWPstring"] = "Loose"
+    kwargset["region"] = global_params["region"]
+    kwargset["isCentral"] = True
+    datasetType = 3
+    if global_params["process_name"] == "TT":
+        datasetType = 1
+    if global_params["process_name"] == "DY":
+        datasetType = 2
+    kwargset["whichType"] = datasetType
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
 
-    if df_cache:
-        dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-            df_cache, global_params, **kwargset
-        )
-        AddCacheColumnsInDf(dfw, dfWrapped_cache, cache_map_name)
+    if df_caches:
+        for df_cache in df_caches:
+            dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
+                df_cache, global_params, period, **kwargset
+            )
+            AddCacheColumnsInDf(dfw, dfWrapped_cache, cache_map_name)
+
     if shift == "Valid" and global_params["compute_unc_variations"]:
         dfw.CreateFromDelta(col_names_central, col_types_central)
     if shift != "Central" and global_params["compute_unc_variations"]:
@@ -76,10 +86,14 @@ def DefineWeightForHistograms(
     final_weight_name="weight_for_hists",
 ):
     categories = global_params["categories"]
+    boosted_categories = global_params.get("boosted_categories", [])
     process_group = global_params["process_group"]
     isCentral = uncName == "Central"
     total_weight_expression = (
-        analysis.GetWeight() if process_group != "data" else "1"
+        # channel, cat, boosted_categories --> these are not needed in the GetWeight function therefore I just put some placeholders
+        analysis.GetWeight(global_params["channels_to_consider"])
+        if process_group != "data"
+        else "1"
     )  # are we sure?
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():

@@ -26,22 +26,23 @@ WorkingPointsDeepFlav = {
     "Run3_2022EE": {"Loose": 0.0614, "Medium": 0.3196, "Tight": 0.73},
 }
 
+
 def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_params["channels_to_consider"]
-    # sign_regions_to_consider = global_params["MuMuMassRegions"]
-    categories = global_params["categories"]
 
+    categories = global_params["categories"]
+    boosted_categories = global_params["boosted_categories"]
     ### add custom categories eventually:
-    custom_categories = []
-    custom_categories_name = global_params.get(
-        "custom_categories", None
-    )  # can be extended to list of names
-    if custom_categories_name:
-        custom_categories = list(global_params.get(custom_categories_name, []))
-        if not custom_categories:
-            print("No custom categories found")
+    # custom_categories = []
+    # custom_categories_name = global_params.get(
+    #     "custom_categories", None
+    # )  # can be extended to list of names
+    # if custom_categories_name:
+    #     custom_categories = list(global_params.get(custom_categories_name, []))
+    #     if not custom_categories:
+    #         print("No custom categories found")
 
     ### regions
     custom_regions = []
@@ -53,7 +54,7 @@ def createKeyFilterDict(global_params, period):
         if not custom_regions:
             print("No custom regions found")
 
-    all_categories = categories + custom_categories
+    all_categories = categories + boosted_categories  # + custom_categories
     custom_subcategories = list(global_params.get("custom_subcategories", []))
     triggers_dict = global_params["hist_triggers"]
     for ch in channels_to_consider:
@@ -122,7 +123,8 @@ def GetBTagWeight(global_cfg_dict, cat, applyBtag=False):
     return f"{btag_weight}*{btagshape_weight}"
 
 
-def GetWeight(channel, cat, boosted_categories):
+def GetWeight(channels):
+    weights_dict = {}
     weights_to_apply = [
         "weight_MC_Lumi_pu"
     ]  # , "weight_L1PreFiring_Central","weight_L1PreFiring_ECAL_Central", "weight_L1PreFiring_Muon_Central"]
@@ -178,16 +180,28 @@ def GetWeight(channel, cat, boosted_categories):
             "weight_tau2_EleSF_wp80noiso_EleIDCentral",
         ],
     }
+    weights_full_string = ""
+    for channel in channels:
+        weights_list = ["weight_MC_Lumi_pu"]
+        # weights_list.extend(trg_weights_dict[channel]) ## currently commented because there are no trigger weights ??
+        weights_list.extend(ID_weights_dict[channel])
 
-    weights_to_apply.extend(ID_weights_dict[channel])
+        # if categories dependent weights are present do a sub loop here extending the dict
+        weights_full_string += (
+            f"""if ({channel}) {{return """ + "*".join(weights_list) + """; } """
+        )
+    weights_full_string += "return 1.f;"
+    print(weights_full_string)
+    ## as it used to be before
     # weights_to_apply.extend(trg_weights_dict[channel])
 
     # if cat not in boosted_categories:
     #      weights_to_apply.extend(["weight_Jet_PUJetID_Central_b1_2", "weight_Jet_PUJetID_Central_b2_2"])
     # else:
     #     weights_to_apply.extend(["weight_pNet_Central"])
-    total_weight = "*".join(weights_to_apply)
-    return total_weight
+
+    # total_weight = "*".join(weights_to_apply)
+    return weights_full_string
 
 
 class DataFrameBuilderForHistograms(DataFrameBuilderBase):
@@ -217,7 +231,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.df = self.df.Define(
             "SelectedFatJet_size_boosted", "SelectedFatJet_p4[fatJet_sel].size()"
         )
-        self.df = self.df.Define("boosted_baseline", "SelectedFatJet_size_boosted >= 1")
+        self.DefineAndAppend("boosted_baseline", "SelectedFatJet_size_boosted >= 1")
 
         # def the correct discriminator
         self.df = self.df.Define(
@@ -302,7 +316,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             self.colToSave.append(reg_name)
         self.df = self.df.Define("Legacy_region", legacy_region_definition)
         self.colToSave.append("Legacy_region")
-
 
     def DefineAndAppend(self, varToDefine, var_expression):
         self.df = self.df.Define(varToDefine, var_expression)
