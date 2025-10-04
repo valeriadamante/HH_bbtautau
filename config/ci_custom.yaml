@@ -7,5 +7,8 @@ compute_unc_histograms: true
 store_noncentral: true
 
 
+vars_to_plot:
+  - tau1_pt
+
 variables:
   - tau1_pt
