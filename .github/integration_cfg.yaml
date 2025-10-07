@@ -4,6 +4,7 @@ authorized_users:
   - Sayan-Dhani
   - prabhatsolanki
   - akhter-towsifa
+  - vdamante
 
 expected_headers:
   - "@cms-flaf-bot test"
