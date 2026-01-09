@@ -31,6 +31,55 @@ WorkingPointsDeepFlav = {
 }
 
 
+def createInvMass(df):
+    df = df.Define("tautau_m_vis", "static_cast<float>((tau1_p4+tau2_p4).M())")
+    particleNet_mass = (
+        "particleNet_mass"
+        if "SelectedFatJet_particleNet_mass_boosted" in df.GetColumnNames()
+        else "particleNetLegacy_mass"
+    )
+    df = df.Define(
+        "bb_m_vis_pnet",
+        f"""
+                   return static_cast<float>(SelectedFatJet_{particleNet_mass}_boosted);
+                   """,
+    )
+    df = df.Define(
+        "bb_m_vis_softdrop",
+        f"""
+                   return static_cast<float>(SelectedFatJet_msoftdrop_boosted);
+                   """,
+    )
+    df = df.Define(
+        "bb_m_vis_fj",
+        f"""
+                   return static_cast<float>(SelectedFatJet_mass_boosted);
+                    """,
+    )
+
+    df = df.Define(
+        "bb_m_vis",
+        f""" if(b1_pt < 0. || b2_pt < 0.) return 0.f; return static_cast<float>((b1_p4+b2_p4).M());""",
+    )
+    df = df.Define(
+        "bbtautau_mass_boosted",
+        """return static_cast<float>((SelectedFatJet_p4_boosted+tau1_p4+tau2_p4).M());""",
+    )
+    df = df.Define(
+        "bbtautau_mass",
+        """if(b1_pt < 0. || b2_pt < 0.) return 0.f; return static_cast<float>((b1_p4+b2_p4+tau1_p4+tau2_p4).M());""",
+    )
+    df = df.Define("dR_tautau", "ROOT::Math::VectorUtil::DeltaR(tau1_p4, tau2_p4)")
+    df = df.Define("dR_bb", "ROOT::Math::VectorUtil::DeltaR(b1_p4, b2_p4)")
+    for tau_idx in [1, 2]:
+        for met_var in ["met", "metnomu", "met_nano"]:
+            df = df.Define(
+                f"tau{tau_idx}_{met_var}_mt",
+                f"static_cast<float>((tau{tau_idx}_p4+{met_var}_p4).Mt())",
+            )
+    return df
+
+
 def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
@@ -150,6 +199,7 @@ def GetWeight(channels):
         "eTau": [
             "weight_tau1_EleSF_wp80iso_EleIDCentral",
             "weight_tau2_TauID_SF_Medium_Central",
+            "weight_trgSF_eTau_Central",
         ],  # theorically
         # 'muTau': ["weight_tau1_HighPt_MuonID_SF_RecoCentral", "weight_tau1_HighPt_MuonID_SF_TightIDCentral", "weight_tau1_MuonID_SF_RecoCentral", "weight_tau1_MuonID_SF_TightID_TrkCentral", "weight_tau1_MuonID_SF_TightRelIsoCentral","weight_tau2_TauID_SF_Medium_Central"],
         "muTau": [
@@ -157,10 +207,12 @@ def GetWeight(channels):
             "weight_tau1_HighPt_MuonID_SF_TightIDCentral",
             "weight_tau1_MuonID_SF_TightID_TrkCentral",
             "weight_tau2_TauID_SF_Medium_Central",
+            "weight_trgSF_muTau_Central",
         ],
         "tauTau": [
             "weight_tau1_TauID_SF_Medium_Central",
             "weight_tau2_TauID_SF_Medium_Central",
+            "weight_trgSF_tauTau_Central",
         ],
         # 'muMu': ["weight_tau1_HighPt_MuonID_SF_RecoCentral", "weight_tau1_HighPt_MuonID_SF_TightIDCentral", "weight_tau1_MuonID_SF_RecoCentral", "weight_tau1_MuonID_SF_TightID_TrkCentral", "weight_tau1_MuonID_SF_TightRelIsoCentral", "weight_tau2_HighPt_MuonID_SF_RecoCentral", "weight_tau2_HighPt_MuonID_SF_TightIDCentral", "weight_tau2_MuonID_SF_RecoCentral", "weight_tau2_MuonID_SF_TightID_TrkCentral", "weight_tau2_MuonID_SF_TightRelIsoCentral"],
         "muMu": [
@@ -170,18 +222,21 @@ def GetWeight(channels):
             "weight_tau2_HighPt_MuonID_SF_RecoCentral",
             "weight_tau2_HighPt_MuonID_SF_TightIDCentral",
             "weight_tau2_MuonID_SF_TightID_TrkCentral",
+            "weight_trgSF_muMueMu_Central",
         ],
         "eMu": [
             "weight_tau1_EleSF_wp80iso_EleIDCentral",
             "weight_tau2_HighPt_MuonID_SF_RecoCentral",
             "weight_tau2_HighPt_MuonID_SF_TightIDCentral",
             "weight_tau2_MuonID_SF_TightID_TrkCentral",
+            "weight_trgSF_muMueMu_Central",
         ],
         #'eMu': ["weight_tau1_EleSF_wp80iso_EleIDCentral","weight_tau2_HighPt_MuonID_SF_RecoCentral", "weight_tau2_HighPt_MuonID_SF_TightIDCentral", "weight_tau2_MuonID_SF_RecoCentral", "weight_tau2_MuonID_SF_TightID_TrkCentral", "weight_tau2_MuonID_SF_TightRelIsoCentral"],
         #'eMu': ["weight_tau1_MuonID_SF_RecoCentral","weight_tau1_HighPt_MuonID_SF_RecoCentral","weight_tau1_MuonID_SF_TightID_TrkCentral","weight_tau1_MuonID_SF_TightRelIsoCentral","weight_tau2_EleSF_wp80iso_EleIDCentral"]
         "eE": [
             "weight_tau1_EleSF_wp80iso_EleIDCentral",
             "weight_tau2_EleSF_wp80noiso_EleIDCentral",
+            "weight_trgSF_eE_Central",
         ],
     }
     weights_full_string = ""
@@ -573,6 +628,15 @@ def PrepareDfForDNN(dfForHistograms):
 
 
 def PrepareDfForHistograms(dfForHistograms):
+    for leg_idx in [1, 2]:
+        tau_legType = f"tau{leg_idx}_legType"
+        dfForHistograms.df = dfForHistograms.df.Redefine(
+            tau_legType, f"static_cast<Leg>({tau_legType})"
+        )
+        dfForHistograms.df = dfForHistograms.df.Define(
+            f"b{leg_idx}_legType", f"b{leg_idx}_pt > 0 ? Leg::jet : Leg::none"
+        )
+        dfForHistograms.df = dfForHistograms.df.Define(f"b{leg_idx}_decayMode", "-2")
     dfForHistograms.df = defineAllP4(dfForHistograms.df)
     dfForHistograms.defineTriggers()
     dfForHistograms.defineBoostedVariables()
@@ -582,10 +646,10 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineLeptonPreselection()
     dfForHistograms.defineApplicationRegions()
     # if not dfForHistograms.isData:
-    #     dfForHistograms.definePNetSFs()
-    #     defineTriggerWeights(dfForHistograms)
+    #     # dfForHistograms.definePNetSFs()
+    #     defineTriggersCentralWeights(dfForHistograms)
     #     if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
-    #         defineTriggerWeightsErrors(dfForHistograms)
+    #         defineTriggersWeightsErrors(dfForHistograms)
     dfForHistograms.defineCRs()
     dfForHistograms.defineCategories()
     dfForHistograms.defineQCDRegions()

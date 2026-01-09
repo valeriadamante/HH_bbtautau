@@ -1,3 +1,64 @@
+DY:
+  name: "DY"
+  color: "kAzure-9"
+  sub_processes:
+    - DY_M_10to50
+    - DYto2E_M_50
+    - DYto2Mu_M_50
+    - DYto2Tau_M_50
+
+DY_M_10to50:
+  name: "DY M10to50"
+  datasets:
+    - DYto2E_M_10to50_amcatnloFXFX
+    - DYto2Mu_M_10to50_amcatnloFXFX
+    - DYto2Tau_M_10to50_amcatnloFXFX
+
+DYto2E_M_50:
+  processors: *DY_processors
+  datasets:
+    - DYto2E_M_50_amcatnloFXFX
+    - DYto2E_M_50_amcatnloFXFX_ext1
+    - DYto2E_M_50_0J_amcatnloFXFX
+    - DYto2E_M_50_1J_amcatnloFXFX
+    - DYto2E_M_50_2J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_40to100_1J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_100to200_1J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_200to400_1J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_400to600_1J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_600_1J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_40to100_2J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_100to200_2J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_200to400_2J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_400to600_2J_amcatnloFXFX
+    - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
+
+DYto2Mu_M_50:
+  processors: *DY_processors
+  datasets:
+    - DYto2Mu_M_50_amcatnloFXFX
+    - DYto2Mu_M_50_amcatnloFXFX_ext1
+    - DYto2Mu_M_50_0J_amcatnloFXFX
+    - DYto2Mu_M_50_1J_amcatnloFXFX
+    - DYto2Mu_M_50_2J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_40to100_1J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_100to200_1J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_200to400_1J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_400to600_1J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_600_1J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_40to100_2J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_100to200_2J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_200to400_2J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_400to600_2J_amcatnloFXFX
+    - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
+
+DYto2Tau_M_50:
+  processors: *DY_processors
+  datasets:
+    - DYto2Tau_M_50_0J_amcatnloFXFX
+    - DYto2Tau_M_50_1J_amcatnloFXFX
+    - DYto2Tau_M_50_2J_amcatnloFXFX
+
 TT:
   name: "t#bar{t}"
   color: "kGreen-3"  # eliminates need for plot.yaml
@@ -39,27 +100,6 @@ ttH:
   datasets:
     - TTHtoNon2B_M125
     - TTHto2B_M125
-
-DY:
-  name: "DY"
-  color: "kAzure-9"
-  datasets:
-    - DYto2E_M_50_amcatnloFXFX
-    # - DYto2E_M_50_amcatnloFXFX_ext1
-    - DYto2Mu_M_50_amcatnloFXFX
-    # - DYto2Mu_M_50_amcatnloFXFX_ext1
-    - DYto2E_M_50_0J_amcatnloFXFX
-    - DYto2Mu_M_50_0J_amcatnloFXFX
-    - DYto2Tau_M_50_0J_amcatnloFXFX
-    # - DYto2Tau_M_50_0J_Filtered_amcatnloFXFX
-    - DYto2E_M_50_1J_amcatnloFXFX
-    - DYto2Mu_M_50_1J_amcatnloFXFX
-    - DYto2Tau_M_50_1J_amcatnloFXFX
-    # - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX
-    - DYto2E_M_50_2J_amcatnloFXFX
-    - DYto2Mu_M_50_2J_amcatnloFXFX
-    - DYto2Tau_M_50_2J_amcatnloFXFX
-    # - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX
 
 WtoLNu:
   name: "W+jets"
@@ -149,8 +189,10 @@ GluGlutoHHto2B2Tau:
     parameters: [ kl, kt, c2 ]
     process_name: GluGluToHHto2B2Tau_${kl}_${kt}_${c2}
     name_pattern: GluGluToHHto2B2Tau kl ${kl} kt ${kt} c2 ${c2}
-    to_plot: [ ('0p00', '1p00', '0p00', ) ]
-    plot_color: [ "kBlack" ]
+    to_plot:
+      - [ '0p00', '1p00', '0p00' ]
+      - [ '1p00', '1p00', '0p00' ]  # This is the sample the robot tests
+    plot_color: [ "kBlack", "kRed" ]
   datasets:
     - GluGlutoHHto2B2Tau_kl_0p00_kt_1p00_c2_0p00
     # - GluGlutoHHto2B2Tau_kl_0p00_kt_1p00_c2_1p00
@@ -173,7 +215,8 @@ VBFHHto2B2Tau:
     parameters: [ CV, C2V, C3 ]
     process_name: VBFHHto2B2Tau_${CV}_${C2V}_${C3}
     name_pattern: VBFHHto2B2Tau CV ${CV} C2V ${C2V} C3 ${C3}
-    to_plot: [ (1, 0, 1) ]
+    to_plot:
+      - [ '1', '0', '1' ]
     plot_color: [ "kBlack" ]
   datasets:
     - VBFHHto2B2Tau_CV_1_C2V_0_C3_1_fixedTauDecays
