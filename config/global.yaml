@@ -42,7 +42,7 @@ corrections:
     stage: HistTuple
     mode: efficiency
   ele: { stage: HistTuple }
-  muScaRe: { stage: AnaTuple , mu_pt_for_ScaReApplication: "nano"}
+  muScaRe: { stage: AnaTuple, mu_pt_for_ScaReApplication: "nano" }
   eleES: { stage: AnaTuple }
   MC_Lumi_pu: { stage: AnaTuple }
   pu: { stages: [ AnaCache, AnaTuple ] }
