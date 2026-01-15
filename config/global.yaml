@@ -37,11 +37,12 @@ corrections:
       tkRelIso: Muon_tkRelIso
       highPtId: Muon_highPtId
       mediumId: Muon_mediumId
+      looseId: Muon_looseId
   trigger:
     stage: HistTuple
     mode: efficiency
   ele: { stage: HistTuple }
-  muScaRe: { stage: HistTuple }
+  muScaRe: { stage: AnaTuple , mu_pt_for_ScaReApplication: "nano"}
   eleES: { stage: AnaTuple }
   MC_Lumi_pu: { stage: AnaTuple }
   pu: { stages: [ AnaCache, AnaTuple ] }
@@ -56,6 +57,7 @@ corrections:
     tagger: particleNet
     jetCollection: centralJet
 
+muonID_WP_for_triggerSF: "Tight"
 variables:
   - tau1_pt
   - tau1_eta

@@ -64,8 +64,4 @@ shape: # syst unc conventions here: https://gitlab.cern.ch/cms-analysis/general/
   JES_Total:
     name: CMS_scale_j_{}
   JER:
-<<<<<<< HEAD
     name: CMS_res_j_{}
-=======
-    name: CMS_res_j_{}
->>>>>>> f5e20f34aa9d3225f413472daa0a5fca3d7f1b35
