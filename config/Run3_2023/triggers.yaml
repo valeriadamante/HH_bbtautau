@@ -68,7 +68,7 @@ mutau:
       online_obj:
         cut: TrigObj_id==13 && (TrigObj_filterBits&64)!=0  # && TrigObj_pt>20
       doMatching: True
-      jsonTRGcorrection_key: 
+      jsonTRGcorrection_key:
         2022_Summer22: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
         2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
         2023_Summer23: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
