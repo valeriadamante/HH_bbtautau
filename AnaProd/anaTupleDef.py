@@ -213,7 +213,7 @@ def addAllVariables(
     applyTriggerFilter,
     global_params,
     channels,
-    dataset_cfg
+    dataset_cfg,
 ):
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
     dfw.Apply(AnaBaseline.RecoJetSelection, global_params["era"])
