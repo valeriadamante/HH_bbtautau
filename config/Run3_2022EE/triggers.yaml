@@ -79,10 +79,8 @@ mutau:
         cut: TrigObj_id==13 && (TrigObj_filterBits&64)!=0 # && TrigObj_pt>20
       doMatching: True
       jsonTRGcorrection_key:
-        2022_Summer22: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
-        2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
-        2023_Summer23: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
-        2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
+        2022_Summer22: "NUM_IsoMu20_DEN_CutBasedIdTight_and_PFIsoTight_{}eff"
+        2022_Summer22EE: "NUM_IsoMu20_DEN_CutBasedIdTight_and_PFIsoTight_{}eff"
       jsonTRGcorrection_elepath: "placeholder"
     - offline_obj:
         cut: "{obj}_legType == Leg::tau && {obj}_pt > 32 && abs({obj}_eta) < 2.1"
