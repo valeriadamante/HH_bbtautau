@@ -121,7 +121,7 @@ singleMu:
         2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
         2023_Summer23: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
         2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}_{DataMC}eff
-      jsonTRGcorrection_elepath: "placeholder" 
+      jsonTRGcorrection_elepath: "placeholder"
 
 singleEle:
   channels:
