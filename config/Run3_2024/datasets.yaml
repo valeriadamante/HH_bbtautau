@@ -249,8 +249,6 @@ GluGlutoHHto2B2Tau_kl_1p00_kt_1p00_c2_0p35:
   mass: 125
   spin: 0
   crossSection: 1pb
-  fs_nanoAOD: T3_CH_CERNBOX:/store/user/vdamante/
-  dirName: "nanobbtt_2024"
 GluGlutoHHto2B2Tau_kl_1p00_kt_1p00_c2_3p00:
   generator: powheg
   mass: 125
@@ -326,3 +324,12 @@ VBFHHto2B2Tau_CV_m1p83_C2V_3p57_C3_m3p39_fixedTauDecays:
   mass: 125
   spin: 0
   crossSection: 1pb
+
+
+custom_CI:
+  generator: powheg
+  mass: 125
+  spin: 0
+  crossSection: 1pb
+  fs_nanoAOD: T3_CH_CERNBOX:/store/user/vdamante/
+  dirName: "nanobbtt_2024"

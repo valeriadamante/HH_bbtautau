@@ -234,3 +234,9 @@ Data:
   name: "Data"
   datasets:
     - TO ADD
+
+custom_CI:
+  name: "custom for CI and test purposes"
+  color: "kAzure+10"
+  datasets:
+    - custom_CI

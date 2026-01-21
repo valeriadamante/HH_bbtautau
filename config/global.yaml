@@ -50,12 +50,12 @@ corrections:
   JER:
     stage: AnaTuple
     apply_jet_horns_fix: true
-  btag:
-    stages: [ AnaTuple ]
-    modes:
-      AnaTuple: shape
-    tagger: particleNet
-    jetCollection: centralJet
+  # btag:
+  #   stages: [ AnaTuple ]
+  #   modes:
+  #     AnaTuple: shape
+  #   tagger: particleNet
+  #   jetCollection: centralJet
 
 extraFormat_for_triggerMatchingAndSF:
   pt: "nano"

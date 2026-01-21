@@ -69,7 +69,7 @@ JetObservables = [
     "hfcentralEtaStripSize",
     "hfsigmaEtaEta",
     "hfsigmaPhiPhi",
-    "jetId",
+    # "jetId",
     "muEF",
     "muonSubtrFactor",
     "nConstituents",
@@ -97,6 +97,9 @@ JetObservables = [
     "ptRes",
     "idbtagPNetB",
     "HHbtag",
+    "passJetIdTight",
+    "passJetIdTightLepVeto",
+    "isInsideVetoRegion",
 ]
 JetObservablesMC = ["hadronFlavour", "partonFlavour"]
 FatJetObservables = [
@@ -215,6 +218,8 @@ def addAllVariables(
     channels,
     dataset_cfg,
 ):
+    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
+    dfw.Apply(CommonBaseline.ApplyJetVetoMap)
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
     dfw.Apply(AnaBaseline.RecoJetSelection, global_params["era"])
     dfw.Apply(AnaBaseline.ThirdLeptonVeto)
@@ -222,12 +227,12 @@ def addAllVariables(
     dfw.DefineAndAppend("Hbb_isValid", "HbbCandidate.has_value()")
     dfw.Apply(AnaBaseline.ExtraRecoJetSelection, global_params["era"])
     dfw.Apply(AnaBaseline.VBFJetSelection)
-    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
-    dfw.Apply(CommonBaseline.ApplyJetVetoMap)
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-    dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
+    # dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
     jet_obs = []
-    jet_obs.extend(JetObservables)
+    for jet_ob in JetObservables:
+        if f"Jet_{jet_ob}" in dfw.df.GetColumnNames():
+            jet_obs.append(jet_ob)
     if global_params["requireHbbJets"]:
         dfw.Apply(AnaBaseline.ApplyJetSelection)
     if not isData:
@@ -345,7 +350,11 @@ def addAllVariables(
     )  # global_params["channelSelection"])
     dfw.Filter(channel_to_select, "select channels")
     fatjet_obs = []
-    fatjet_obs.extend(FatJetObservables)
+
+    for fatjet_ob in FatJetObservables:
+        if f"FatJet_{fatjet_ob}" in dfw.df.GetColumnNames():
+            fatjet_obs.append(fatjet_ob)
+    # fatjet_obs.extend(FatJetObservables)
     if not isData:
         dfw.Define(
             f"FatJet_genJet_idx",
@@ -368,7 +377,10 @@ def addAllVariables(
             f"SelectedFatJet_{fatjetVar}", f"FatJet_{fatjetVar}[FatJet_bbCand]"
         )
     subjet_obs = []
-    subjet_obs.extend(SubJetObservables)
+    # subjet_obs.extend(SubJetObservables)
+    for subjet_ob in SubJetObservables:
+        if f"SubJet_{subjet_ob}" in dfw.df.GetColumnNames():
+            subjet_obs.append(subjet_ob)
     if not isData:
         dfw.Define(
             f"SubJet1_genJet_idx",
@@ -471,6 +483,8 @@ def addAllVariables(
             )
 
         for deepTauScore in deepTauScores:
+            if f"Tau_{deepTauScore}" not in dfw.df.GetColumnNames():
+                continue
             LegVar(
                 deepTauScore,
                 f"Tau_{deepTauScore}.at(HttCandidate.leg_index[{leg_idx}])",
@@ -478,6 +492,8 @@ def addAllVariables(
                 default="-1.f",
             )
         for muon_obs in Muon_observables:
+            if muon_obs not in dfw.df.GetColumnNames():
+                continue
             LegVar(
                 muon_obs,
                 f"{muon_obs}.at(HttCandidate.leg_index[{leg_idx}])",
@@ -485,6 +501,8 @@ def addAllVariables(
                 default="-1",
             )
         for ele_obs in Electron_observables:
+            if ele_obs not in dfw.df.GetColumnNames():
+                continue
             LegVar(
                 ele_obs,
                 f"{ele_obs}.at(HttCandidate.leg_index[{leg_idx}])",
