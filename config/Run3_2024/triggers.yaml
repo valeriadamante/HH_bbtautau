@@ -89,7 +89,7 @@ etau:
       online_obj:
         cut: TrigObj_id==11 && (TrigObj_filterBits&128)!=0  # && TrigObj_pt>24
       doMatching: True
-      jsonTRGcorrection_key: { "2022_Summer22": "Electron-HLT-{}Eff", "2022_Summer22EE": "Electron-HLT-{}Eff", "2023_Summer23": "Electron-HLT-{}Eff", "2023_Summer23BPix": "Electron-HLT-{}Eff","2024_Summer24": "Electron-HLT-{}Eff" }
+      jsonTRGcorrection_key: { "2022_Summer22": "Electron-HLT-{}Eff", "2022_Summer22EE": "Electron-HLT-{}Eff", "2023_Summer23": "Electron-HLT-{}Eff", "2023_Summer23BPix": "Electron-HLT-{}Eff", "2024_Summer24": "Electron-HLT-{}Eff" }
       jsonTRGcorrection_elepath: "HLT_SF_Ele24_TightID"
     - offline_obj:
         cut: "{obj}_legType == Leg::tau && {obj}_pt > 35 && abs({obj}_eta) < 2.1"
