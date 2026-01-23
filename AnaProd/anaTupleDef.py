@@ -256,7 +256,7 @@ def addAllVariables(
     dfw.Apply(AnaBaseline.ExtraRecoJetSelection, global_params["era"])
     dfw.Apply(AnaBaseline.VBFJetSelection)
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-    # dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
+    dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
     jet_obs = []
     jet_obs.extend(JetObservables)
     if global_params["requireHbbJets"]:
