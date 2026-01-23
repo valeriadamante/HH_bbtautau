@@ -18,7 +18,7 @@ variables:
   Corrections_version: "default"
   HH_bbtautau_active: "1"
   HH_bbtautau_task: "FLAF.Analysis.tasks.HistPlotTask"
-  HH_bbtautau_eras: ["Run3_2022", "Run3_2022EE", "Run3_2023", "Run3_2023BPix"]
+  HH_bbtautau_eras: [ "Run3_2022", "Run3_2022EE", "Run3_2023", "Run3_2023BPix" ]
   HH_bbtautau_args: "--branches 0 --test 1000"
   TEST_TIMEOUT: "4h"
 
