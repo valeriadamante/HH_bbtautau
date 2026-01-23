@@ -511,32 +511,29 @@ def addAllVariables(
             )
 
         for deepTauScore in deepTauScores:
-            if f"Tau_{deepTauScore}" not in dfw.df.GetColumnNames():
-                continue
-            LegVar(
-                deepTauScore,
-                f"Tau_{deepTauScore}.at(HttCandidate.leg_index[{leg_idx}])",
-                var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::tau",
-                default="-1.f",
-            )
+            if f"Tau_{deepTauScore}" in dfw.df.GetColumnNames():
+                LegVar(
+                    deepTauScore,
+                    f"Tau_{deepTauScore}.at(HttCandidate.leg_index[{leg_idx}])",
+                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::tau",
+                    default="-1.f",
+                )
         for muon_obs in Muon_observables:
-            if muon_obs not in dfw.df.GetColumnNames():
-                continue
-            LegVar(
-                muon_obs,
-                f"{muon_obs}.at(HttCandidate.leg_index[{leg_idx}])",
-                var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
-                default="-1",
-            )
+            if muon_obs in dfw.df.GetColumnNames():
+                LegVar(
+                    muon_obs,
+                    f"{muon_obs}.at(HttCandidate.leg_index[{leg_idx}])",
+                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
+                    default="-1",
+                )
         for ele_obs in Electron_observables:
-            if ele_obs not in dfw.df.GetColumnNames():
-                continue
-            LegVar(
-                ele_obs,
-                f"{ele_obs}.at(HttCandidate.leg_index[{leg_idx}])",
-                var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::e",
-                default="-1",
-            )
+            if ele_obs in dfw.df.GetColumnNames():
+                LegVar(
+                    ele_obs,
+                    f"{ele_obs}.at(HttCandidate.leg_index[{leg_idx}])",
+                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::e",
+                    default="-1",
+                )
         if not isData:
             dfw.Define(
                 f"tau{leg_idx+1}_genMatchIdx",
