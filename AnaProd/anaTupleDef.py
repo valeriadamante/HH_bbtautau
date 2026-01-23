@@ -258,9 +258,7 @@ def addAllVariables(
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
     # dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
     jet_obs = []
-    for jet_ob in JetObservables:
-        if f"Jet_{jet_ob}" in dfw.df.GetColumnNames():
-            jet_obs.append(jet_ob)
+    jet_obs.extend(JetObservables)
     if global_params["requireHbbJets"]:
         dfw.Apply(AnaBaseline.ApplyJetSelection)
     if not isData:
@@ -378,11 +376,7 @@ def addAllVariables(
     )  # global_params["channelSelection"])
     dfw.Filter(channel_to_select, "select channels")
     fatjet_obs = []
-
-    for fatjet_ob in FatJetObservables:
-        if f"FatJet_{fatjet_ob}" in dfw.df.GetColumnNames():
-            fatjet_obs.append(fatjet_ob)
-    # fatjet_obs.extend(FatJetObservables)
+    fatjet_obs.extend(FatJetObservables)
     if not isData:
         dfw.Define(
             f"FatJet_genJet_idx",
@@ -405,10 +399,7 @@ def addAllVariables(
             f"SelectedFatJet_{fatjetVar}", f"FatJet_{fatjetVar}[FatJet_bbCand]"
         )
     subjet_obs = []
-    # subjet_obs.extend(SubJetObservables)
-    for subjet_ob in SubJetObservables:
-        if f"SubJet_{subjet_ob}" in dfw.df.GetColumnNames():
-            subjet_obs.append(subjet_ob)
+    subjet_obs.extend(SubJetObservables)
     if not isData:
         dfw.Define(
             f"SubJet1_genJet_idx",
@@ -511,29 +502,26 @@ def addAllVariables(
             )
 
         for deepTauScore in deepTauScores:
-            if f"Tau_{deepTauScore}" in dfw.df.GetColumnNames():
-                LegVar(
-                    deepTauScore,
-                    f"Tau_{deepTauScore}.at(HttCandidate.leg_index[{leg_idx}])",
-                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::tau",
-                    default="-1.f",
-                )
+            LegVar(
+                deepTauScore,
+                f"Tau_{deepTauScore}.at(HttCandidate.leg_index[{leg_idx}])",
+                var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::tau",
+                default="-1.f",
+            )
         for muon_obs in Muon_observables:
-            if muon_obs in dfw.df.GetColumnNames():
-                LegVar(
-                    muon_obs,
-                    f"{muon_obs}.at(HttCandidate.leg_index[{leg_idx}])",
-                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
-                    default="-1",
-                )
+            LegVar(
+                muon_obs,
+                f"{muon_obs}.at(HttCandidate.leg_index[{leg_idx}])",
+                var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
+                default="-1",
+            )
         for ele_obs in Electron_observables:
-            if ele_obs in dfw.df.GetColumnNames():
-                LegVar(
-                    ele_obs,
-                    f"{ele_obs}.at(HttCandidate.leg_index[{leg_idx}])",
-                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::e",
-                    default="-1",
-                )
+            LegVar(
+                ele_obs,
+                f"{ele_obs}.at(HttCandidate.leg_index[{leg_idx}])",
+                var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::e",
+                default="-1",
+            )
         if not isData:
             dfw.Define(
                 f"tau{leg_idx+1}_genMatchIdx",
