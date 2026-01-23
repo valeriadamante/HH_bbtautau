@@ -97,7 +97,7 @@ JetObservables = [
     "puId_pull",
     "rawFactor",
     "ptRes",
-    "idbtagPNetB",
+    # "idbtagPNetB", # this observable does not exist neither in nanoAOD v12/13/14 nor in hleprare skims.. at least for 2022/2022EE/2023/2023BPix, and as far as I checked also in NanoAOD v15 is not present... - V.
     "HHbtag",
     "passJetIdTight",
     "passJetIdTightLepVeto",
