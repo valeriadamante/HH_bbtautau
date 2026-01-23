@@ -4,5 +4,5 @@ corrections:
     stages: [ AnaTuple ]
     modes:
       AnaTuple: none
-    tagger: particleNet
+    tagger: UParTAK4
     jetCollection: centralJet
