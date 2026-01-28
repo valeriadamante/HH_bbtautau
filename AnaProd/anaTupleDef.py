@@ -97,7 +97,7 @@ JetObservables = [
     "puId_pull",
     "rawFactor",
     "ptRes",
-    # "idbtagPNetB", # this observable does not exist neither in nanoAOD v12/13/14 nor in hleprare skims.. at least for 2022/2022EE/2023/2023BPix, and as far as I checked also in NanoAOD v15 is not present... - V.
+    "idbtagPNetB",
     "HHbtag",
     "passJetIdTight",
     "passJetIdTightLepVeto",
@@ -256,7 +256,7 @@ def addAllVariables(
     dfw.Apply(AnaBaseline.ExtraRecoJetSelection, global_params["era"])
     dfw.Apply(AnaBaseline.VBFJetSelection)
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-    # dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
+    dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
     jet_obs = []
     jet_obs.extend(JetObservables)
     if global_params["requireHbbJets"]:
