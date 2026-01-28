@@ -18,12 +18,6 @@ BaseModel:
   data:
     - Data
 
-
-TestModel:
-  name: "Test model for CI"
-  signals:
-    - custom_CI
-
 TestModel:
   name: "Test model for CI"
   backgrounds:
